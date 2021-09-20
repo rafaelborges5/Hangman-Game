@@ -1,0 +1,67 @@
+import random
+from time import sleep
+def call_word():
+    with open("sowpods.txt", "r") as f:
+        lines = f.readlines()
+
+    word = random.choice(lines)
+    return word
+
+def list_creator():
+    c_list = []
+    word = call_word().lower()
+    for n in range(len(word)):
+        c_list.append("_")
+    c_list.pop()
+    word_list = list(word)
+    word_list.pop()
+    return c_list, word_list;
+
+def run_game(c_list, word_list, letters_guessed):
+    error_count = 0
+    while c_list != word_list and error_count < 6:
+        print("Welcome To Hangman!")
+        print("You have " + str(6 - error_count) + " lives")
+        sleep(1)
+        auxiliary_count = 0
+        auxiliary_count2 = 0
+        spaced_word = ""
+        for ele in c_list:
+            spaced_word += ele + " "
+        print(spaced_word)
+        guess = input("Please enter your letter here: ")
+        for letter in word_list:
+            if letter == guess:
+                c_list[auxiliary_count2] = guess
+                auxiliary_count += 1
+            auxiliary_count2 += 1
+        if auxiliary_count != 0 and guess not in letters_guessed:
+            print("You´ve guessed " + str(auxiliary_count) + " characters\n")
+        else:
+            if guess in letters_guessed:
+                print("Already guessed this letter!\n")
+            else:
+                print("Letter does not belong to the word\n")
+                error_count += 1
+        if c_list == word_list:
+            spaced_word = ""
+            for ele in c_list:
+                spaced_word += ele + " "
+            print(spaced_word)
+            print("You´ve completed the word!\n")
+            sleep(1)
+        if c_list != word_list and error_count == 6:
+            print("You have run out of lives!\n")
+        letters_guessed.append(guess)
+        sleep(1)
+
+
+play_again = True
+while play_again:
+    c_list, word_list = list_creator()
+    letters_guessed = []
+    run_game(c_list, word_list, letters_guessed)
+    wish = input("Do you want to play again?(1-yes/2-no): ")
+    if wish != "1":
+        play_again = False
+
